@@ -12,6 +12,16 @@ public class SudokuBoard {
         }
     }
 
+    public SudokuBoard(SudokuBoard other) {
+        for (int r = 0; r < SIZE; r++) {
+            for (int c = 0; c < SIZE; c++) {
+                this.cells[r][c] = new SudokuCell();
+                this.cells[r][c].setValue(other.getValue(r, c));
+                this.cells[r][c].setFixed(other.getCell(r, c).isFixed());
+            }
+        }
+    }
+
     public SudokuCell getCell(int row, int col) {
         return cells[row][col];
     }
@@ -37,5 +47,28 @@ public class SudokuBoard {
                 if (cells[r][c].getValue() == 0)
                     return false;
         return true;
+    }
+
+    // Método auxiliar para testes
+    public int[][] getBoard() {
+        int[][] board = new int[SIZE][SIZE];
+        for (int r = 0; r < SIZE; r++) {
+            for (int c = 0; c < SIZE; c++) {
+                board[r][c] = cells[r][c].getValue();
+            }
+        }
+        return board;
+    }
+
+    // Método auxiliar para testes
+    public void setBoard(int[][] puzzle) {
+        for (int r = 0; r < SIZE; r++) {
+            for (int c = 0; c < SIZE; c++) {
+                cells[r][c] = new SudokuCell();
+                if (puzzle[r][c] != 0) {
+                    setValue(r, c, puzzle[r][c]);
+                }
+            }
+        }
     }
 }

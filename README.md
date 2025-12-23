@@ -37,6 +37,8 @@ Para compilar e executar o projeto, siga os passos abaixo:
 
     Isso iniciará a interface gráfica do jogo de Sudoku.
 
+    ![Interface do Jogo Sudoku](./src/main/resources/static/img/CapturaTab.png)
+
 ## Como Jogar
 
 * A interface do jogo exibe um tabuleiro de Sudoku.

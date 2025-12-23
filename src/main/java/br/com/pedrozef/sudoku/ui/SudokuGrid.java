@@ -50,9 +50,18 @@ public class SudokuGrid extends GridPane {
                     }
                 });
 
-                // Estilo simples: destaque de blocos 3x3
-                String bg = ((r / 3 + c / 3) % 2 == 0) ? "#f0f0f0" : "#ffffff";
-                cell.setStyle("-fx-font-size: 18; -fx-background-color: " + bg + ";");
+                // Estilo aprimorado: diferencia células fixas e mantém o fundo do bloco
+                String bg = ((r / 3 + c / 3) % 2 == 0) ? "#E0E0E0" : "#FFFFFF";
+                String style = "-fx-font-size: 18; -fx-background-color: " + bg + ";";
+
+                if (fixed) {
+                    style += "-fx-font-weight: bold; -fx-text-fill: #0D47A1;";
+                } else {
+                    // Para células editáveis, podemos definir uma cor de texto diferente se quisermos
+                    style += "-fx-text-fill: #0D47A1;";
+                }
+
+                cell.setStyle(style);
 
                 add(cell, c, r);
             }

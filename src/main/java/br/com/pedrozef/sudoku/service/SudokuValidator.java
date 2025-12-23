@@ -27,42 +27,56 @@ public class SudokuValidator {
     }
 
     public boolean isSolved(SudokuBoard board) {
-        // todas células preenchidas e válidas
-        for (int r = 0; r < SudokuBoard.SIZE; r++) {
-            for (int c = 0; c < SudokuBoard.SIZE; c++) {
-                int v = board.getValue(r, c);
-                if (v == 0 || !isValidSpot(board, r, c))
+        // Verifica se todas as linhas, colunas e blocos 3x3 estão corretos
+        for (int i = 0; i < SudokuBoard.SIZE; i++) {
+            if (!isRowValid(board, i) || !isColumnValid(board, i)) {
+                return false;
+            }
+        }
+        for (int r = 0; r < SudokuBoard.SIZE; r += 3) {
+            for (int c = 0; c < SudokuBoard.SIZE; c += 3) {
+                if (!isBlockValid(board, r, c)) {
                     return false;
+                }
             }
         }
         return true;
     }
 
-    // Verifica consistência local sem remover o próprio valor
-    private boolean isValidSpot(SudokuBoard board, int row, int col) {
-        int num = board.getValue(row, col);
-        if (num == 0)
-            return false;
-
-        // checa duplicidade na linha (ignorando a própria célula)
-        for (int c = 0; c < SudokuBoard.SIZE; c++)
-            if (c != col && board.getValue(row, c) == num)
+    private boolean isSetValid(int[] set) {
+        java.util.Set<Integer> seen = new java.util.HashSet<>();
+        for (int num : set) {
+            if (num == 0 || !seen.add(num)) {
                 return false;
-
-        // checa duplicidade na coluna
-        for (int r = 0; r < SudokuBoard.SIZE; r++)
-            if (r != row && board.getValue(r, col) == num)
-                return false;
-
-        // checa duplicidade no bloco
-        int sr = row - row % 3, sc = col - col % 3;
-        for (int r = 0; r < 3; r++)
-            for (int c = 0; c < 3; c++) {
-                int rr = sr + r, cc = sc + c;
-                if ((rr != row || cc != col) && board.getValue(rr, cc) == num)
-                    return false;
             }
+        }
+        return seen.size() == 9;
+    }
 
-        return true;
+    private boolean isRowValid(SudokuBoard board, int row) {
+        int[] set = new int[SudokuBoard.SIZE];
+        for (int c = 0; c < SudokuBoard.SIZE; c++) {
+            set[c] = board.getValue(row, c);
+        }
+        return isSetValid(set);
+    }
+
+    private boolean isColumnValid(SudokuBoard board, int col) {
+        int[] set = new int[SudokuBoard.SIZE];
+        for (int r = 0; r < SudokuBoard.SIZE; r++) {
+            set[r] = board.getValue(r, col);
+        }
+        return isSetValid(set);
+    }
+
+    private boolean isBlockValid(SudokuBoard board, int startRow, int startCol) {
+        int[] set = new int[SudokuBoard.SIZE];
+        int i = 0;
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                set[i++] = board.getValue(startRow + r, startCol + c);
+            }
+        }
+        return isSetValid(set);
     }
 }
